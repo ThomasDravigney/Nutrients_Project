@@ -44,6 +44,8 @@ def login():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     return render_template('index.html', title='Accueil')
 
 
