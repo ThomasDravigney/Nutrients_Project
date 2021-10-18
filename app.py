@@ -1,7 +1,8 @@
-from flask import Flask, render_template, flash, redirect, url_for, request
+from flask import Flask, render_template, flash, redirect, url_for, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, login_user, LoginManager
 from flask_migrate import Migrate
+from barcode_reader import gen_frames
 import food_api
 from config import Config
 
@@ -49,7 +50,6 @@ def index():
         return redirect(url_for('login'))
     form = SearchFood()
     if form.validate_on_submit():
-        print(form.food.data)
         return redirect(url_for('search', q=form.food.data))
     return render_template('index.html', title='Accueil', form=form)
 
@@ -58,7 +58,12 @@ def index():
 def search():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-    return render_template('search_results.html', food=food_api.search(request.args.get('q')))
+    return render_template('search_results.html', food=food_api.keyword_search(request.args.get('q')))
+
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == '__main__':

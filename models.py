@@ -12,11 +12,22 @@ def clear_database(session):
     session.commit()
 
 
+class UserAteFood(db.Model):
+    user_id = db.Column(db.ForeignKey('user.id'), primary_key=True)
+    food_id = db.Column(db.ForeignKey('food.id'), primary_key=True)
+    quantity = db.Column(db.Float)
+    date = db.Column(db.DateTime, index=True)
+    meal = db.Column(db.String, index=True)
+    user = db.relationship("User", back_populates="eaten_food")
+    food = db.relationship("Food", back_populates="eaten_by")
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(128), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     register_date = db.Column(db.DateTime, default=datetime.utcnow)
+    eaten_food = db.relationship("UserAteFood", back_populates="user")
 
     def __repr__(self):
         return '<User {}>'.format(self.email)
@@ -26,6 +37,12 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+class Food(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    barcode = db.Column(db.String(13), index=True, unique=True)
+    eaten_by = db.relationship("UserAteFood", back_populates="food")
 
 
 @login.user_loader
