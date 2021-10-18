@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Results for {{ request.args.get('q') }}</h1>
+
+    {% for f in food['products'] %}
+        <img style="max-width: 150px" src={{ f.image_url }}>
+        <p>{{ f.product_name }}</p>
+    {% endfor %}
+{% endblock %}

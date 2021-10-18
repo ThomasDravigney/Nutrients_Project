@@ -1,9 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% if current_user.is_authenticated %}
-        <h1>Bienvenue, {{ current_user.email }} !</h1>
-    {% else %}
-        <h1>Accueil</h1>
-    {% endif %}
+    <h1>Bienvenue, {{ current_user.email }} !</h1>
+
+    <form action="" method="post" class="d-flex" novalidate>
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.food.label }}<br>
+            {{ form.food(size=32) }}<br>
+            {% for error in form.food.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div style="">{{ form.submit(class_="btn btn-success", style="margin-top: 1em") }}</div>
+    </form>
 {% endblock %}

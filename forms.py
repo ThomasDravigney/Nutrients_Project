@@ -17,5 +17,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('S\'identifier')
 
 
-class NutrientForm(FlaskForm):
-    food = StringField('Email', validators=[DataRequired()])
+class SearchFood(FlaskForm):
+    food = StringField('Food', validators=[DataRequired()])
+    submit = SubmitField('Rechercher')
+
